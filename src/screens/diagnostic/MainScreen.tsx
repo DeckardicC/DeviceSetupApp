@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,10 +6,16 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  Modal,
+  TextInput,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const MainScreen = ({navigation}: any) => {
+  const [cameraAccessModalVisible, setCameraAccessModalVisible] = useState(false);
+  const [engineerPhone, setEngineerPhone] = useState('');
+
   // Моковые данные для примера
   const deviceData = {
     panelModel: 'Сокол Плюс (рев. 5)',
@@ -27,6 +33,17 @@ const MainScreen = ({navigation}: any) => {
     rootfsDate: '2025-06-19',
     sipRegistered: false,
     gateMode: 'Выключен',
+  };
+
+  const handleSaveCameraAccess = () => {
+    if (!engineerPhone.trim()) {
+      Alert.alert('Ошибка', 'Введите номер телефона инженера связи');
+      return;
+    }
+    // В реальном приложении здесь будет API запрос для добавления номера в карточку квартиры 1100
+    Alert.alert('Успешно', `Номер телефона ${engineerPhone} добавлен в карточку квартиры 1100`);
+    setCameraAccessModalVisible(false);
+    setEngineerPhone('');
   };
 
   const renderInfoRow = (label: string, value: string, isLast = false) => (
@@ -57,7 +74,15 @@ const MainScreen = ({navigation}: any) => {
         <View style={{width: 24}} />
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
+        <TouchableOpacity
+          style={styles.cameraAccessButton}
+          onPress={() => setCameraAccessModalVisible(true)}>
+          <Icon name="videocam" size={24} color="#5B9FED" />
+          <Text style={styles.cameraAccessButtonText}>Доступ до камер</Text>
+          <Icon name="chevron-right" size={24} color="#666" />
+        </TouchableOpacity>
+
         <View style={styles.whiteContainer}>
           {renderInfoRow('Модель панели', deviceData.panelModel)}
           {renderInfoRow('Модель камеры', deviceData.cameraModel)}
@@ -111,6 +136,46 @@ const MainScreen = ({navigation}: any) => {
           {renderInfoRow('Режим калитки', deviceData.gateMode, true)}
         </View>
       </ScrollView>
+
+      {/* Модальное окно доступа до камер */}
+      <Modal
+        visible={cameraAccessModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setCameraAccessModalVisible(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Доступ до камер</Text>
+
+            <Text style={styles.inputLabel}>Номер телефона инженера связи *</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Введите номер телефона"
+              placeholderTextColor="#999"
+              value={engineerPhone}
+              onChangeText={setEngineerPhone}
+              keyboardType="phone-pad"
+              autoFocus={true}
+            />
+
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.cancelButton]}
+                onPress={() => {
+                  setCameraAccessModalVisible(false);
+                  setEngineerPhone('');
+                }}>
+                <Text style={styles.cancelButtonText}>Отмена</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.saveButton]}
+                onPress={handleSaveCameraAccess}>
+                <Text style={styles.saveButtonText}>Сохранить</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -137,6 +202,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 16,
+  },
+  scrollContent: {
+    paddingBottom: 48,
   },
   sectionTitle: {
     fontSize: 14,
@@ -213,6 +281,89 @@ const styles = StyleSheet.create({
   versionDate: {
     fontSize: 13,
     color: '#999',
+  },
+  cameraAccessButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  cameraAccessButtonText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000',
+    marginLeft: 12,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 24,
+    width: '100%',
+    maxWidth: 400,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  inputLabel: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+    marginTop: 12,
+  },
+  input: {
+    backgroundColor: '#f5f5f5',
+    padding: 12,
+    borderRadius: 8,
+    fontSize: 15,
+    color: '#000',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    marginBottom: 20,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  modalButton: {
+    flex: 1,
+    padding: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  cancelButton: {
+    backgroundColor: '#f5f5f5',
+  },
+  cancelButtonText: {
+    color: '#666',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  saveButton: {
+    backgroundColor: '#5B9FED',
+  },
+  saveButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 

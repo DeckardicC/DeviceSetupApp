@@ -104,7 +104,9 @@ const DateTimeScreen = ({navigation}: any) => {
         <View style={{width: 24}} />
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}>
         <View style={styles.cardsContainer}>
           {/* Часовой пояс */}
           <View style={styles.card}>
@@ -184,7 +186,9 @@ const DateTimeScreen = ({navigation}: any) => {
           onPress={() => setShowTimezoneModal(false)}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Выберите часовой пояс</Text>
-            <ScrollView style={styles.modalScroll}>
+            <ScrollView
+              style={styles.modalScroll}
+              contentContainerStyle={styles.modalScrollContent}>
               {timezones.map(tz => (
                 <TouchableOpacity
                   key={tz}
@@ -235,6 +239,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 16,
+  },
+  scrollContent: {
+    paddingBottom: 32,
   },
   cardsContainer: {
     flexDirection: 'column',
@@ -365,6 +372,9 @@ const styles = StyleSheet.create({
   },
   modalScroll: {
     maxHeight: 400,
+  },
+  modalScrollContent: {
+    paddingBottom: 16,
   },
   modalOption: {
     flexDirection: 'row',

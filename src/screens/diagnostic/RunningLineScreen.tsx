@@ -35,7 +35,9 @@ const RunningLineScreen = ({navigation}: any) => {
         <View style={{width: 24}} />
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}>
         <Text style={styles.sectionTitle}>Настройка бегущей строки</Text>
 
         <View style={styles.card}>
@@ -82,9 +84,10 @@ const RunningLineScreen = ({navigation}: any) => {
                     placeholder="Введите текст бегущей строки"
                     placeholderTextColor="#999"
                     multiline={false}
-                    maxLength={100}
+                    maxLength={99}
                     editable={true}
                     selectTextOnFocus={true}
+                    autoFocus={true}
                   />
                   {text.length > 0 && (
                     <TouchableOpacity
@@ -95,7 +98,7 @@ const RunningLineScreen = ({navigation}: any) => {
                   )}
                 </View>
                 <Text style={styles.charCount}>
-                  Количество символов для ввода: {text.length}
+                  Осталось символов для ввода: {99 - text.length}
                 </Text>
               </View>
             </>
@@ -171,6 +174,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 16,
+  },
+  scrollContent: {
+    paddingBottom: 48,
   },
   sectionTitle: {
     fontSize: 14,

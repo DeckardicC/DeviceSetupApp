@@ -34,7 +34,9 @@ const DDNSScreen = ({navigation}: any) => {
         <View style={{width: 24}} />
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}>
         <Text style={styles.sectionTitle}>
           Динамическая система доменных имён
         </Text>
@@ -51,107 +53,104 @@ const DDNSScreen = ({navigation}: any) => {
         </View>
 
         {/* Форма настроек */}
-        <View style={styles.formContainer}>
-          <View style={styles.formRow}>
-            {/* Левая колонка */}
-            <View style={styles.formColumn}>
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>
-                  Интервал отправки запросов (секунды) *
-                </Text>
-                <TextInput
-                  style={styles.input}
-                  value={interval}
-                  onChangeText={setInterval}
-                  keyboardType="numeric"
-                  placeholder="300"
-                  placeholderTextColor="#666"
-                  editable={ddnsEnabled}
-                />
-                <Text style={styles.hint}>Ограничение от 1 до 65535</Text>
-              </View>
+        {ddnsEnabled && (
+          <>
+            <View style={styles.formContainer}>
+              <View style={styles.formRow}>
+                {/* Левая колонка */}
+                <View style={styles.formColumn}>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>
+                      Интервал отправки запросов (секунды) *
+                    </Text>
+                    <TextInput
+                      style={styles.input}
+                      value={interval}
+                      onChangeText={setInterval}
+                      keyboardType="numeric"
+                      placeholder="300"
+                      placeholderTextColor="#666"
+                    />
+                    <Text style={styles.hint}>Ограничение от 1 до 65535</Text>
+                  </View>
 
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Порт сервера *</Text>
-                <TextInput
-                  style={styles.input}
-                  value={port}
-                  onChangeText={setPort}
-                  keyboardType="numeric"
-                  placeholder="8081"
-                  placeholderTextColor="#666"
-                  editable={ddnsEnabled}
-                />
-                <Text style={styles.hint}>Ограничение от 1 до 65535</Text>
-              </View>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Порт сервера *</Text>
+                    <TextInput
+                      style={styles.input}
+                      value={port}
+                      onChangeText={setPort}
+                      keyboardType="numeric"
+                      placeholder="8081"
+                      placeholderTextColor="#666"
+                    />
+                    <Text style={styles.hint}>Ограничение от 1 до 65535</Text>
+                  </View>
 
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Адрес сервера *</Text>
-                <TextInput
-                  style={styles.input}
-                  value={serverAddress}
-                  onChangeText={setServerAddress}
-                  placeholder="10.199.63.7"
-                  placeholderTextColor="#666"
-                  editable={ddnsEnabled}
-                />
-                <Text style={styles.hint}>Количество символов для ввода: 117</Text>
-              </View>
-            </View>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Адрес сервера *</Text>
+                    <TextInput
+                      style={styles.input}
+                      value={serverAddress}
+                      onChangeText={setServerAddress}
+                      placeholder="10.199.63.7"
+                      placeholderTextColor="#666"
+                    />
+                    <Text style={styles.hint}>Количество символов для ввода: 117</Text>
+                  </View>
+                </View>
 
-            {/* Правая колонка */}
-            <View style={styles.formColumn}>
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Логин *</Text>
-                <TextInput
-                  style={styles.input}
-                  value={login}
-                  onChangeText={setLogin}
-                  placeholder="default"
-                  placeholderTextColor="#666"
-                  editable={ddnsEnabled}
-                />
-                <Text style={styles.hint}>Количество символов для ввода: 121</Text>
-              </View>
+                {/* Правая колонка */}
+                <View style={styles.formColumn}>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Логин *</Text>
+                    <TextInput
+                      style={styles.input}
+                      value={login}
+                      onChangeText={setLogin}
+                      placeholder="default"
+                      placeholderTextColor="#666"
+                    />
+                    <Text style={styles.hint}>Количество символов для ввода: 121</Text>
+                  </View>
 
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>Пароль *</Text>
-                <TextInput
-                  style={styles.input}
-                  value={password}
-                  onChangeText={setPassword}
-                  placeholder="******"
-                  placeholderTextColor="#666"
-                  secureTextEntry
-                  editable={ddnsEnabled}
-                />
-                <Text style={styles.hint}>Количество символов для ввода: 121</Text>
-              </View>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>Пароль *</Text>
+                    <TextInput
+                      style={styles.input}
+                      value={password}
+                      onChangeText={setPassword}
+                      placeholder="******"
+                      placeholderTextColor="#666"
+                      secureTextEntry
+                    />
+                    <Text style={styles.hint}>Количество символов для ввода: 121</Text>
+                  </View>
 
-              <View style={styles.inputGroup}>
-                <Text style={styles.inputLabel}>
-                  Дополнительное поле (hostname) *
-                </Text>
-                <TextInput
-                  style={styles.input}
-                  value={hostname}
-                  onChangeText={setHostname}
-                  placeholder="ddns.ISOam"
-                  placeholderTextColor="#666"
-                  editable={ddnsEnabled}
-                />
-                <Text style={styles.hint}>Количество символов для ввода: 118</Text>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.inputLabel}>
+                      Дополнительное поле (hostname) *
+                    </Text>
+                    <TextInput
+                      style={styles.input}
+                      value={hostname}
+                      onChangeText={setHostname}
+                      placeholder="ddns.ISOam"
+                      placeholderTextColor="#666"
+                    />
+                    <Text style={styles.hint}>Количество символов для ввода: 118</Text>
+                  </View>
+                </View>
               </View>
             </View>
-          </View>
-        </View>
 
-        <TouchableOpacity
-          style={[styles.saveButton, !ddnsEnabled && styles.saveButtonDisabled]}
-          onPress={handleSave}
-          disabled={!ddnsEnabled}>
-          <Text style={styles.saveButtonText}>Сохранить</Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.saveButton}
+              onPress={handleSave}>
+              <Text style={styles.saveButtonText}>Сохранить</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -179,6 +178,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 16,
+  },
+  scrollContent: {
+    paddingBottom: 48,
   },
   sectionTitle: {
     fontSize: 14,
@@ -251,9 +253,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     marginBottom: 20,
-  },
-  saveButtonDisabled: {
-    backgroundColor: '#ccc',
   },
   saveButtonText: {
     color: '#fff',

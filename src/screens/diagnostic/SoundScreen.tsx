@@ -68,7 +68,9 @@ const SoundScreen = ({navigation}: any) => {
         <View style={{width: 24}} />
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}>
         <Text style={styles.pageTitle}>Общие настройки звука</Text>
 
         {/* Системные звуки */}
@@ -184,6 +186,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 12,
+  },
+  scrollContent: {
+    paddingBottom: 32,
   },
   pageTitle: {
     fontSize: 15,

@@ -115,7 +115,9 @@ const VideoStreamScreen = ({navigation}: any) => {
         onPress={onClose}>
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>{title}</Text>
-          <ScrollView style={styles.modalScroll}>
+          <ScrollView
+            style={styles.modalScroll}
+            contentContainerStyle={styles.modalScrollContent}>
             {options.map(option => (
               <TouchableOpacity
                 key={option}
@@ -256,7 +258,9 @@ const VideoStreamScreen = ({navigation}: any) => {
         <View style={{width: 24}} />
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}>
         <Text style={styles.sectionTitle}>Настройка видеопотока</Text>
 
         {/* Табы выбора потока */}
@@ -368,6 +372,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 12,
+  },
+  scrollContent: {
+    paddingBottom: 32,
   },
   sectionTitle: {
     fontSize: 14,
@@ -502,6 +509,9 @@ const styles = StyleSheet.create({
   },
   modalScroll: {
     maxHeight: 400,
+  },
+  modalScrollContent: {
+    paddingBottom: 16,
   },
   modalOption: {
     flexDirection: 'row',

@@ -11,6 +11,7 @@ import {
   LayoutAnimation,
   Platform,
   UIManager,
+  Switch,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -27,6 +28,12 @@ const UpdateScreen = ({navigation}: any) => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [advancedExpanded, setAdvancedExpanded] = useState(false);
+  
+  // Расширенные настройки
+  const [updateMicrocontroller, setUpdateMicrocontroller] = useState(true);
+  const [updateApplications, setUpdateApplications] = useState(true);
+  const [updateAudioRecordings, setUpdateAudioRecordings] = useState(false);
+  const [updateLibraries, setUpdateLibraries] = useState(true);
 
   const currentVersion = '2.5.0.12.8';
 
@@ -69,7 +76,9 @@ const UpdateScreen = ({navigation}: any) => {
         <View style={{width: 24}} />
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}>
         {/* Текущая версия */}
         <View style={styles.versionContainer}>
           <Text style={styles.versionLabel}>Текущая версия прошивки:</Text>
@@ -187,15 +196,62 @@ const UpdateScreen = ({navigation}: any) => {
           <Icon
             name={advancedExpanded ? 'expand-less' : 'expand-more'}
             size={24}
-            color="#fff"
+            color="#000"
           />
         </TouchableOpacity>
 
         {advancedExpanded && (
           <View style={styles.advancedContent}>
-            <Text style={styles.advancedText}>
-              Дополнительные параметры обновления будут доступны здесь
-            </Text>
+            <View style={styles.advancedOptionsRow}>
+              <View style={styles.advancedOptionColumn}>
+                <View style={styles.advancedOption}>
+                  <Text style={styles.advancedOptionText}>
+                    Обновить микроконтроллер
+                  </Text>
+                  <Switch
+                    value={updateMicrocontroller}
+                    onValueChange={setUpdateMicrocontroller}
+                    trackColor={{false: '#ccc', true: '#5B9FED'}}
+                    thumbColor="#fff"
+                  />
+                </View>
+                <View style={styles.advancedOption}>
+                  <Text style={styles.advancedOptionText}>
+                    Обновить аудиозаписи (онлайн-ассистент, оповещения)
+                  </Text>
+                  <Switch
+                    value={updateAudioRecordings}
+                    onValueChange={setUpdateAudioRecordings}
+                    trackColor={{false: '#ccc', true: '#5B9FED'}}
+                    thumbColor="#fff"
+                  />
+                </View>
+              </View>
+              <View style={styles.advancedOptionColumn}>
+                <View style={styles.advancedOption}>
+                  <Text style={styles.advancedOptionText}>
+                    Обновить приложения
+                  </Text>
+                  <Switch
+                    value={updateApplications}
+                    onValueChange={setUpdateApplications}
+                    trackColor={{false: '#ccc', true: '#5B9FED'}}
+                    thumbColor="#fff"
+                  />
+                </View>
+                <View style={styles.advancedOption}>
+                  <Text style={styles.advancedOptionText}>
+                    Обновить библиотеки
+                  </Text>
+                  <Switch
+                    value={updateLibraries}
+                    onValueChange={setUpdateLibraries}
+                    trackColor={{false: '#ccc', true: '#5B9FED'}}
+                    thumbColor="#fff"
+                  />
+                </View>
+              </View>
+            </View>
           </View>
         )}
 
@@ -240,6 +296,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 16,
+  },
+  scrollContent: {
+    paddingBottom: 48,
   },
   versionContainer: {
     backgroundColor: '#fff',
@@ -349,6 +408,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
   },
   advancedTitle: {
     fontSize: 16,
@@ -356,16 +417,35 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   advancedContent: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff',
     padding: 16,
     borderRadius: 12,
     marginTop: -8,
     marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
   },
-  advancedText: {
+  advancedOptionsRow: {
+    flexDirection: 'row',
+    gap: 16,
+  },
+  advancedOptionColumn: {
+    flex: 1,
+    gap: 16,
+  },
+  advancedOption: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    minHeight: 44,
+  },
+  advancedOptionText: {
     fontSize: 14,
-    color: '#666',
-    textAlign: 'center',
+    color: '#000',
+    flex: 1,
+    flexShrink: 1,
+    marginRight: 12,
+    lineHeight: 20,
   },
   updateButton: {
     flexDirection: 'row',
@@ -389,7 +469,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderLeftWidth: 4,
     borderLeftColor: '#5B9FED',
-    marginBottom: 20,
+    marginBottom: 32,
+    alignItems: 'flex-start',
   },
   infoText: {
     flex: 1,
@@ -397,6 +478,7 @@ const styles = StyleSheet.create({
     color: '#1976D2',
     marginLeft: 8,
     lineHeight: 18,
+    flexWrap: 'wrap',
   },
 });
 

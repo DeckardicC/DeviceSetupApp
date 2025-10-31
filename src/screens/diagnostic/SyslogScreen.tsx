@@ -43,7 +43,9 @@ const SyslogScreen = ({navigation}: any) => {
         <View style={{width: 24}} />
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}>
         <Text style={styles.sectionTitle}>
           Настройка удаленного журналирования
         </Text>
@@ -159,7 +161,9 @@ const SyslogScreen = ({navigation}: any) => {
           onPress={() => setShowLogLevelModal(false)}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Уровень логирования</Text>
-            <ScrollView style={styles.modalScroll}>
+            <ScrollView
+              style={styles.modalScroll}
+              contentContainerStyle={styles.modalScrollContent}>
               {logLevels.map(level => (
                 <TouchableOpacity
                   key={level}
@@ -210,6 +214,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 16,
+  },
+  scrollContent: {
+    paddingBottom: 32,
   },
   sectionTitle: {
     fontSize: 14,
@@ -347,6 +354,9 @@ const styles = StyleSheet.create({
   },
   modalScroll: {
     maxHeight: 400,
+  },
+  modalScrollContent: {
+    paddingBottom: 16,
   },
   modalOption: {
     flexDirection: 'row',

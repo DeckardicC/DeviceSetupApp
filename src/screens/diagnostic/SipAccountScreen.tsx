@@ -23,7 +23,9 @@ const SipAccountScreen = ({navigation}: any) => {
         <View style={{width: 24}} />
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}>
         <Text style={styles.sectionTitle}>Статус SIP-регистрации</Text>
 
         <View style={styles.card}>
@@ -109,6 +111,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 16,
+  },
+  scrollContent: {
+    paddingBottom: 32,
   },
   sectionTitle: {
     fontSize: 14,

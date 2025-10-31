@@ -302,7 +302,9 @@ const NetworkSettingsScreen = ({navigation}: any) => {
         <View style={{width: 24}} />
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}>
         <TouchableOpacity style={styles.addButton} onPress={handleAddInterface}>
           <Icon name="add" size={20} color="#fff" />
           <Text style={styles.addButtonText}>Добавить интерфейс</Text>
@@ -340,6 +342,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 16,
+  },
+  scrollContent: {
+    paddingBottom: 48,
   },
   addButton: {
     flexDirection: 'row',
@@ -432,6 +437,7 @@ const styles = StyleSheet.create({
   },
   warningText: {
     flex: 1,
+    flexShrink: 1,
     fontSize: 13,
     color: '#856404',
     marginLeft: 8,

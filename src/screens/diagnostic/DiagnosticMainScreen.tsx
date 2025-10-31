@@ -97,7 +97,9 @@ const DiagnosticMainScreen = ({navigation}: any) => {
         <View style={{width: 24}} />
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}>
         {menuItems.map(item => (
           <View key={item.id} style={styles.menuSection}>
             <TouchableOpacity
@@ -169,6 +171,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 16,
+  },
+  scrollContent: {
+    paddingBottom: 32,
   },
   menuSection: {
     marginBottom: 12,

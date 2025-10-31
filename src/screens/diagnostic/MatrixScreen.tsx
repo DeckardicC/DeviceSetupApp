@@ -29,6 +29,37 @@ const MatrixScreen = ({navigation}: any) => {
   const [autoLastApt, setAutoLastApt] = useState('');
   const [editingCell, setEditingCell] = useState<MatrixCell | null>(null);
   const [cellValue, setCellValue] = useState('');
+  
+  // Мастер автозаполнения
+  const [autofillModalVisible, setAutofillModalVisible] = useState(false);
+  const [manufacturer, setManufacturer] = useState('');
+  const [manufacturerDropdownOpen, setManufacturerDropdownOpen] = useState(false);
+  const [model, setModel] = useState('');
+  const [modelDropdownOpen, setModelDropdownOpen] = useState(false);
+  const [apartmentCount, setApartmentCount] = useState('');
+  const [firstApartmentNumber, setFirstApartmentNumber] = useState('1');
+  
+  const manufacturers = [
+    'Сокол',
+    'Элтис',
+    'Визит',
+    'Цифрал',
+    'Бевард',
+    'Даксис',
+    'Метаком',
+    'Факториал',
+  ];
+  
+  const modelsByManufacturer: Record<string, string[]> = {
+    'Сокол': ['КУ-100', 'КУ-100-Line'],
+    'Элтис': ['Модель 1', 'Модель 2'],
+    'Визит': ['Модель 1', 'Модель 2'],
+    'Цифрал': ['КМГ-100', 'КМГ-200'],
+    'Бевард': ['Модель 1', 'Модель 2'],
+    'Даксис': ['Модель 1', 'Модель 2'],
+    'Метаком': ['Модель 1', 'Модель 2'],
+    'Факториал': ['Модель 1', 'Модель 2'],
+  };
 
   // Генерация начальной матрицы
   const generateInitialMatrix = (): string[][] => {
@@ -112,7 +143,9 @@ const MatrixScreen = ({navigation}: any) => {
         <View style={{width: 24}} />
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}>
         <Text style={styles.sectionTitle}>Настройка матрицы ККМ</Text>
 
         {/* Выбор коммутатора */}
@@ -132,7 +165,9 @@ const MatrixScreen = ({navigation}: any) => {
               <Text style={styles.switchTabText}>Коммутатор №{num}</Text>
             </TouchableOpacity>
           ))}
-          <TouchableOpacity style={styles.switchTabOutlined}>
+          <TouchableOpacity
+            style={styles.switchTabOutlined}
+            onPress={() => setAutofillModalVisible(true)}>
             <Icon name="auto-awesome" size={16} color="#5B9FED" />
             <Text style={styles.switchTabOutlinedText}>
               Мастер автозаполнения
@@ -312,14 +347,34 @@ const MatrixScreen = ({navigation}: any) => {
             </Text>
 
             <Text style={styles.inputLabel}>Значение</Text>
-            <TextInput
-              style={styles.modalInput}
-              value={cellValue}
-              onChangeText={setCellValue}
-              keyboardType="numeric"
-              placeholder="Введите значение"
-              placeholderTextColor="#999"
-            />
+            <View style={styles.valueInputContainer}>
+              <TouchableOpacity
+                style={styles.valueButton}
+                onPress={() => {
+                  const numValue = parseInt(cellValue) || 0;
+                  setCellValue(Math.max(0, numValue - 1).toString());
+                }}>
+                <Icon name="remove" size={24} color="#5B9FED" />
+              </TouchableOpacity>
+              <TextInput
+                style={styles.modalInput}
+                value={cellValue}
+                onChangeText={setCellValue}
+                keyboardType="numeric"
+                placeholder="Введите значение"
+                placeholderTextColor="#999"
+                autoFocus={true}
+                selectTextOnFocus={true}
+              />
+              <TouchableOpacity
+                style={styles.valueButton}
+                onPress={() => {
+                  const numValue = parseInt(cellValue) || 0;
+                  setCellValue((numValue + 1).toString());
+                }}>
+                <Icon name="add" size={24} color="#5B9FED" />
+              </TouchableOpacity>
+            </View>
 
             <View style={styles.modalButtons}>
               <TouchableOpacity
@@ -331,6 +386,217 @@ const MatrixScreen = ({navigation}: any) => {
                 style={[styles.modalButton, styles.saveButton]}
                 onPress={handleSaveCell}>
                 <Text style={styles.saveButtonText}>Сохранить</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Модальное окно мастера автозаполнения */}
+      <Modal
+        visible={autofillModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setAutofillModalVisible(false)}>
+        <View style={styles.autofillModalOverlay}>
+          <View style={styles.autofillModalContent}>
+            <View style={styles.autofillModalHeader}>
+              <Text style={styles.autofillModalTitle}>Мастер автозаполнения</Text>
+              <TouchableOpacity onPress={() => setAutofillModalVisible(false)}>
+                <Icon name="close" size={24} color="#000" />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView
+              style={styles.autofillModalBody}
+              contentContainerStyle={styles.autofillModalBodyContent}>
+              {/* Производитель */}
+              <View style={styles.autofillField}>
+                <Text style={styles.autofillLabel}>Производитель *</Text>
+                <TouchableOpacity
+                  style={styles.autofillDropdown}
+                  onPress={() => {
+                    setManufacturerDropdownOpen(!manufacturerDropdownOpen);
+                    setModelDropdownOpen(false);
+                  }}>
+                  <Text style={styles.autofillDropdownText}>
+                    {manufacturer || 'Выберите производителя'}
+                  </Text>
+                  <Icon
+                    name={manufacturerDropdownOpen ? 'expand-less' : 'expand-more'}
+                    size={20}
+                    color="#666"
+                  />
+                </TouchableOpacity>
+                {manufacturerDropdownOpen && (
+                  <View style={styles.autofillDropdownList}>
+                    {manufacturers.map((mfg, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        style={[
+                          styles.autofillDropdownItem,
+                          index === manufacturers.length - 1 &&
+                            styles.autofillDropdownItemLast,
+                        ]}
+                        onPress={() => {
+                          setManufacturer(mfg);
+                          setManufacturerDropdownOpen(false);
+                          setModel('');
+                        }}>
+                        <Text style={styles.autofillDropdownItemText}>{mfg}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )}
+              </View>
+
+              {/* Модель */}
+              <View style={styles.autofillField}>
+                <Text style={styles.autofillLabel}>Модель *</Text>
+                <TouchableOpacity
+                  style={[
+                    styles.autofillDropdown,
+                    !manufacturer && styles.autofillDropdownDisabled,
+                  ]}
+                  onPress={() => {
+                    if (manufacturer) {
+                      setModelDropdownOpen(!modelDropdownOpen);
+                      setManufacturerDropdownOpen(false);
+                    }
+                  }}
+                  disabled={!manufacturer}>
+                  <Text
+                    style={[
+                      styles.autofillDropdownText,
+                      !manufacturer && styles.autofillDropdownTextDisabled,
+                    ]}>
+                    {model || 'Выберите модель'}
+                  </Text>
+                  <Icon
+                    name={modelDropdownOpen ? 'expand-less' : 'expand-more'}
+                    size={20}
+                    color="#666"
+                  />
+                </TouchableOpacity>
+                {modelDropdownOpen && manufacturer && (
+                  <View style={styles.autofillDropdownList}>
+                    {(modelsByManufacturer[manufacturer] || []).map((mdl, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        style={[
+                          styles.autofillDropdownItem,
+                          index ===
+                            (modelsByManufacturer[manufacturer] || []).length - 1 &&
+                            styles.autofillDropdownItemLast,
+                        ]}
+                        onPress={() => {
+                          setModel(mdl);
+                          setModelDropdownOpen(false);
+                        }}>
+                        <Text style={styles.autofillDropdownItemText}>{mdl}</Text>
+                        {model === mdl && (
+                          <Icon name="check" size={18} color="#5B9FED" />
+                        )}
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )}
+              </View>
+
+              {/* Количество квартир */}
+              <View style={styles.autofillField}>
+                <Text style={styles.autofillLabel}>Количество квартир *</Text>
+                <View style={styles.autofillValueInputContainer}>
+                  <TouchableOpacity
+                    style={styles.autofillValueButton}
+                    onPress={() => {
+                      const numValue = parseInt(apartmentCount) || 0;
+                      setApartmentCount(Math.max(0, numValue - 1).toString());
+                    }}>
+                    <Icon name="remove" size={24} color="#000" />
+                  </TouchableOpacity>
+                  <TextInput
+                    style={styles.autofillValueInput}
+                    value={apartmentCount}
+                    onChangeText={setApartmentCount}
+                    keyboardType="numeric"
+                    placeholder="0"
+                    placeholderTextColor="#666"
+                  />
+                  <TouchableOpacity
+                    style={styles.autofillValueButton}
+                    onPress={() => {
+                      const numValue = parseInt(apartmentCount) || 0;
+                      setApartmentCount((numValue + 1).toString());
+                    }}>
+                    <Icon name="add" size={24} color="#000" />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.autofillHint}>
+                  Максимальное количество квартир для подключения: 0
+                </Text>
+              </View>
+
+              {/* Номер 1-ой квартиры в матрице */}
+              <View style={styles.autofillField}>
+                <Text style={styles.autofillLabel}>
+                  Номер 1-ой квартиры в матрице *
+                </Text>
+                <View style={styles.autofillValueInputContainer}>
+                  <TouchableOpacity
+                    style={styles.autofillValueButton}
+                    onPress={() => {
+                      const numValue = parseInt(firstApartmentNumber) || 1;
+                      setFirstApartmentNumber(Math.max(1, numValue - 1).toString());
+                    }}>
+                    <Icon name="remove" size={24} color="#000" />
+                  </TouchableOpacity>
+                  <TextInput
+                    style={styles.autofillValueInput}
+                    value={firstApartmentNumber}
+                    onChangeText={setFirstApartmentNumber}
+                    keyboardType="numeric"
+                    placeholder="1"
+                    placeholderTextColor="#666"
+                  />
+                  <TouchableOpacity
+                    style={styles.autofillValueButton}
+                    onPress={() => {
+                      const numValue = parseInt(firstApartmentNumber) || 1;
+                      setFirstApartmentNumber((numValue + 1).toString());
+                    }}>
+                    <Icon name="add" size={24} color="#000" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {/* Информационный баннер */}
+              <View style={styles.autofillInfoBanner}>
+                <Icon name="warning" size={20} color="#FFC107" />
+                <Text style={styles.autofillInfoText}>
+                  После завершения не забудьте сохранить матрицу
+                </Text>
+              </View>
+            </ScrollView>
+
+            {/* Кнопки */}
+            <View style={styles.autofillModalFooter}>
+              <TouchableOpacity
+                style={styles.autofillRunButton}
+                onPress={() => {
+                  if (!manufacturer || !model || !apartmentCount || !firstApartmentNumber) {
+                    Alert.alert('Ошибка', 'Заполните все обязательные поля');
+                    return;
+                  }
+                  Alert.alert('Успешно', 'Мастер автозаполнения запущен');
+                  setAutofillModalVisible(false);
+                }}>
+                <Text style={styles.autofillRunButtonText}>Запустить</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.autofillCancelButton}
+                onPress={() => setAutofillModalVisible(false)}>
+                <Text style={styles.autofillCancelButtonText}>Отмена</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -362,6 +628,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 16,
+  },
+  scrollContent: {
+    paddingBottom: 32,
   },
   sectionTitle: {
     fontSize: 14,
@@ -600,13 +869,32 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
   },
+  valueInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    gap: 12,
+  },
+  valueButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 8,
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
   modalInput: {
+    flex: 1,
     backgroundColor: '#f5f5f5',
     padding: 12,
     borderRadius: 8,
     fontSize: 15,
     color: '#000',
-    marginBottom: 20,
+    textAlign: 'center',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
   },
   modalButtons: {
     flexDirection: 'row',
@@ -631,6 +919,177 @@ const styles = StyleSheet.create({
   },
   saveButtonText: {
     color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  autofillModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  autofillModalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    width: '100%',
+    maxWidth: 500,
+    maxHeight: '90%',
+    overflow: 'hidden',
+  },
+  autofillModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  autofillModalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#000',
+  },
+  autofillModalBody: {
+    padding: 20,
+    maxHeight: 400,
+    flexGrow: 1,
+  },
+  autofillModalBodyContent: {
+    paddingBottom: 20,
+  },
+  autofillField: {
+    marginBottom: 20,
+  },
+  autofillLabel: {
+    fontSize: 14,
+    color: '#000',
+    marginBottom: 8,
+    fontWeight: '500',
+  },
+  autofillDropdown: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  autofillDropdownDisabled: {
+    opacity: 0.5,
+  },
+  autofillDropdownText: {
+    fontSize: 15,
+    color: '#000',
+    flex: 1,
+  },
+  autofillDropdownTextDisabled: {
+    color: '#999',
+  },
+  autofillDropdownList: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    marginTop: 4,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  autofillDropdownItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  autofillDropdownItemLast: {
+    borderBottomWidth: 0,
+  },
+  autofillDropdownItemText: {
+    fontSize: 15,
+    color: '#000',
+  },
+  autofillValueInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  autofillValueButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 8,
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  autofillValueInput: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    padding: 12,
+    borderRadius: 8,
+    fontSize: 15,
+    color: '#000',
+    textAlign: 'center',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  autofillHint: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 8,
+  },
+  autofillInfoBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFC107',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 12,
+    gap: 10,
+  },
+  autofillInfoText: {
+    flex: 1,
+    fontSize: 14,
+    color: '#000',
+    fontWeight: '500',
+  },
+  autofillModalFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
+    gap: 12,
+  },
+  autofillRunButton: {
+    flex: 1,
+    backgroundColor: '#5B9FED',
+    padding: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  autofillRunButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  autofillCancelButton: {
+    padding: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  autofillCancelButtonText: {
+    color: '#5B9FED',
     fontSize: 16,
     fontWeight: '600',
   },
