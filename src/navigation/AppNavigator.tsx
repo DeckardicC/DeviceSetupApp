@@ -20,7 +20,6 @@ import SoundScreen from '../screens/diagnostic/SoundScreen';
 import EqualizerScreen from '../screens/diagnostic/EqualizerScreen';
 import SipAccountScreen from '../screens/diagnostic/SipAccountScreen';
 import VideoStreamScreen from '../screens/diagnostic/VideoStreamScreen';
-import DDNSScreen from '../screens/diagnostic/DDNSScreen';
 import NetworkSettingsScreen from '../screens/diagnostic/NetworkSettingsScreen';
 import SyslogScreen from '../screens/diagnostic/SyslogScreen';
 import UpdateScreen from '../screens/diagnostic/UpdateScreen';
@@ -47,7 +46,6 @@ export type RootStackParamList = {
   Equalizer: undefined;
   SipAccount: undefined;
   VideoStream: undefined;
-  DDNS: undefined;
   NetworkSettings: undefined;
   Syslog: undefined;
   Update: undefined;
@@ -87,7 +85,6 @@ const AppNavigator = () => {
         <Stack.Screen name="Equalizer" component={EqualizerScreen} />
         <Stack.Screen name="SipAccount" component={SipAccountScreen} />
                 <Stack.Screen name="VideoStream" component={VideoStreamScreen} />
-                <Stack.Screen name="DDNS" component={DDNSScreen} />
                 <Stack.Screen name="NetworkSettings" component={NetworkSettingsScreen} />
         <Stack.Screen name="Syslog" component={SyslogScreen} />
         <Stack.Screen name="Update" component={UpdateScreen} />

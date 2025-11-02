@@ -6,14 +6,12 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Modal,
-  Switch,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const ResetScreen = ({navigation}: any) => {
   const [showFirstConfirm, setShowFirstConfirm] = useState(false);
   const [showSecondConfirm, setShowSecondConfirm] = useState(false);
-  const [deleteNetworkSettings, setDeleteNetworkSettings] = useState(false);
 
   const handleResetPress = () => {
     setShowFirstConfirm(true);
@@ -27,7 +25,7 @@ const ResetScreen = ({navigation}: any) => {
   const handleFinalReset = () => {
     setShowSecondConfirm(false);
     // Здесь будет логика сброса
-    console.log('Сброс устройства...', {deleteNetworkSettings});
+    console.log('Сброс устройства...');
   };
 
   return (
@@ -48,22 +46,6 @@ const ResetScreen = ({navigation}: any) => {
             Все настройки устройства будут сброшены до заводских значений. Это
             действие невозможно отменить.
           </Text>
-        </View>
-
-        {/* Тумблер для сетевых настроек */}
-        <View style={styles.switchContainer}>
-          <View style={styles.switchTextContainer}>
-            <Text style={styles.switchLabel}>Удалить сетевые настройки</Text>
-            <Text style={styles.switchDescription}>
-              При включении будут также удалены все сетевые конфигурации
-            </Text>
-          </View>
-          <Switch
-            value={deleteNetworkSettings}
-            onValueChange={setDeleteNetworkSettings}
-            trackColor={{false: '#ccc', true: '#5B9FED'}}
-            thumbColor="#fff"
-          />
         </View>
 
         <TouchableOpacity style={styles.resetButton} onPress={handleResetPress}>
@@ -96,14 +78,6 @@ const ResetScreen = ({navigation}: any) => {
             <Text style={styles.modalText}>
               Вы действительно хотите сбросить устройство к заводским настройкам?
             </Text>
-            {deleteNetworkSettings && (
-              <View style={styles.modalCheckbox}>
-                <Icon name="check-box" size={20} color="#5B9FED" />
-                <Text style={styles.modalCheckboxText}>
-                  Удалить сетевые настройки
-                </Text>
-              </View>
-            )}
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={[styles.modalButton, styles.cancelButton]}
@@ -136,14 +110,6 @@ const ResetScreen = ({navigation}: any) => {
               Вы уверены, что хотите сбросить устройство? Все данные будут удалены
               безвозвратно!
             </Text>
-            {deleteNetworkSettings && (
-              <View style={styles.modalCheckbox}>
-                <Icon name="check-box" size={20} color="#5B9FED" />
-                <Text style={styles.modalCheckboxText}>
-                  Удалить сетевые настройки
-                </Text>
-              </View>
-            )}
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={[styles.modalButton, styles.cancelButton]}
@@ -206,35 +172,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     paddingHorizontal: 20,
   },
-  switchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  switchTextContainer: {
-    flex: 1,
-    marginRight: 12,
-  },
-  switchLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
-    marginBottom: 4,
-  },
-  switchDescription: {
-    fontSize: 13,
-    color: '#666',
-    lineHeight: 18,
-  },
   resetButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -296,22 +233,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: 16,
-  },
-  modalCheckbox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#EBF5FF',
-    padding: 10,
-    borderRadius: 8,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#5B9FED',
-  },
-  modalCheckboxText: {
-    fontSize: 14,
-    color: '#5B9FED',
-    marginLeft: 8,
-    fontWeight: '600',
   },
   modalButtons: {
     flexDirection: 'row',

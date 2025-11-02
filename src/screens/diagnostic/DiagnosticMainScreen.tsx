@@ -61,7 +61,6 @@ const DiagnosticMainScreen = ({navigation}: any) => {
       label: 'Сеть',
       icon: 'settings-ethernet',
       submenu: [
-        {id: 'ddns', label: 'DDNS', route: 'DDNS'},
         {id: 'networkSettings', label: 'Настройка сети', route: 'NetworkSettings'},
         {id: 'syslog', label: 'Syslog-сервер', route: 'Syslog'},
       ],
